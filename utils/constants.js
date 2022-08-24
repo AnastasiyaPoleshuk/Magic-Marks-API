@@ -1,6 +1,6 @@
 const CONSTANTS = {
     PORT: 5000,
-    HELTHCHECK: {
+    HEALTHCHECK: {
         Application: ' Magic Mark API',
         Status: 'Healthy'
     }

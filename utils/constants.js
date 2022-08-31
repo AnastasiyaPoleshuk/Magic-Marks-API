@@ -1,7 +1,7 @@
 const CONSTANTS = {
-    PORT: 5000,
     HEALTHCHECK: {
-        Application: 'Magic Mark API',
+        PORT: 5000,
+        Application: ' Magic Mark API',
         Status: 'Healthy'
     },
     MOCK_USER: {

@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({
 
 router(app);
 
-const server = app.listen(constants.CONSTANTS.PORT, (error) => {
+const server = app.listen(process.env.PORT || constants.CONSTANTS.PORT, (error) => {
     if (error) return console.log(`Error: ${error}`);
 
     console.log(`Server listening on port ${server.address().port}`);

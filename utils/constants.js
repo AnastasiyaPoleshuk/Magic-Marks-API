@@ -4,7 +4,7 @@ const CONSTANTS = {
         Application: 'Magic Mark API',
         Status: 'Healthy'
     },
-    USER: {
+    MOCK_USER: {
         Email: "user@mail.com",
         Password: "123"
     },

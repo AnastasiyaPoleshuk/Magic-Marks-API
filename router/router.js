@@ -3,7 +3,7 @@ const loginUser = require('../login/login');
 
 const router = (app) => {
     app.get('/healthcheck', (request, response) => {
-        const responseData = getHealthStatus();
+        const responseData = getHealthStatus(request);
         response.send(responseData);
     });
     app.get('/', (request, response) => {

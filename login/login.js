@@ -8,30 +8,29 @@ const loginUser = (req, res) => {
   const user = { email: userEmail, password: userPassword };
 
   const checkResponse = checkUserCredentials(user)
-
+  
   res.status(checkResponse.status).send(checkResponse.responseData);
 };
 
 function checkUserCredentials(userData) {
-  let responseData;
-  if (
-    userData.email === constants.CONSTANTS.USER.Email &&
-    userData.password === constants.CONSTANTS.USER.Password
-  ) {
-    responseData = {
-      isAuthenticated: true,
-      accsess_token: createToken(),
-    };
-    const status = 200;
-    return { responseData, status };
-  } else {
-    responseData = {
-      isAuthenticated: false,
-      accsess_token: '',
-    };
-    const status = 401;
-    return { responseData, status };
+  const responseData = {
+    isAuthenticated: true,
+    accsess_token: '',
   };
+  let status;
+
+  if (
+    userData.email === constants.CONSTANTS.MOCK_USER.Email &&
+    userData.password === constants.CONSTANTS.MOCK_USER.Password
+  ) {
+    responseData.accsess_token = createToken();
+    status = 200;
+  } else {
+    responseData.isAuthenticated = false;
+    status = 401;
+  };
+
+  return { responseData, status };
 }
 
 function createToken() {

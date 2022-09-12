@@ -1,5 +1,6 @@
 const getHealthStatus = require('../healthcheck/healthcheck');
 const loginUser = require('../login/login');
+const getMarks = require('../getMarks/getMarks');
 
 const router = (app) => {
     app.get('/healthcheck', (request, response) => {
@@ -11,6 +12,10 @@ const router = (app) => {
     });
     app.post('/login', (request, response) => {
         const responseData = loginUser(request, response);
+        response.send(responseData);
+    });
+    app.get('/marks', (request, response) => {
+        const responseData = getMarks(request, response);
         response.send(responseData);
     });
 

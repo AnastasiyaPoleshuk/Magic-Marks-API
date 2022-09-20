@@ -4,6 +4,7 @@ const CONSTANTS = {
         Application: ' Magic Mark API',
         Status: 'Healthy'
     },
+    PORT:5000,
     MOCK_USER: {
         Email: "user@mail.com",
         Password: "123"

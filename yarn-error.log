@@ -1,0 +1,65 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Uladzimir_Paliashuk\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\oracleDAC12c\product\12.2.0\client_1;C:\oracleDAC12c\product\12.2.0\client_1\bin;C:\Python310\Scripts\;C:\Python310\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Users\Uladzimir_Paliashuk\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Microsoft\Web Platform Installer\;C:\oracleDAC12c;C:\Program Files\Amazon\AWSCLI\bin\;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\GitHub CLI\;C:\Users\Uladzimir_Paliashuk\AppData\Local\Microsoft\WindowsApps;C:\Users\Uladzimir_Paliashuk\.dotnet\tools;C:\Users\Uladzimir_Paliashuk\AppData\Local\GitHubDesktop\bin;C:\Users\Uladzimir_Paliashuk\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Uladzimir_Paliashuk\AppData\Roaming\npm;C:\Users\Uladzimir_Paliashuk\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\liquibase;C:\Program Files\heroku\bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  16.15.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://axs-971217900852.d.codeartifact.us-west-2.amazonaws.com/npm/npm/body-parser: Unauthenticated: request used expired credentials. Please renew your credentials.
+      at Request.params.callback [as _callback] (C:\Users\Uladzimir_Paliashuk\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:67029:18)
+      at Request.self.callback (C:\Users\Uladzimir_Paliashuk\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140883:22)
+      at Request.emit (node:events:527:28)
+      at Request.<anonymous> (C:\Users\Uladzimir_Paliashuk\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141855:10)
+      at Request.emit (node:events:527:28)
+      at Gunzip.<anonymous> (C:\Users\Uladzimir_Paliashuk\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141777:12)
+      at Object.onceWrapper (node:events:641:28)
+      at Gunzip.emit (node:events:527:28)
+      at endReadableNT (node:internal/streams/readable:1345:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "magic-marks-api",
+    "version": "1.0.0",
+    "engines": {
+     "node": "16.x"
+     },
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js",
+      "dev": "nodemon index.js",
+      "worker": "node index.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/AnastasiyaPoleshuk/Magic-Marks-API.git"
+    },
+    "author": "Anastasiya Poleshuk <anastasiyapaliashuk@gmail.com>",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/AnastasiyaPoleshuk/Magic-Marks-API/issues"
+    },
+    "homepage": "https://github.com/AnastasiyaPoleshuk/Magic-Marks-API#readme",
+    "dependencies": {
+      "body-parser": "^1.20.0",
+      "express": "^4.18.1",
+      "nodemon": "^2.0.19",
+      "request": "^2.88.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

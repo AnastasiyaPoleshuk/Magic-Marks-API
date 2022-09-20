@@ -3,8 +3,10 @@ const constants = require('../utils/constants')
 const loginUser = (req, res) => {
   if (!req.body) return res.sendStatus(400);
 
-  const userEmail = req.body.Email;
-  const userPassword = req.body.Password;
+  console.log(req.body);
+
+  const userEmail = req.body.email;
+  const userPassword = req.body.password;
   const user = { email: userEmail, password: userPassword };
 
   const checkResponse = checkUserCredentials(user)

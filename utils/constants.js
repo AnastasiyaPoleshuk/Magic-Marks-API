@@ -14,7 +14,7 @@ const CONSTANTS = {
         { SubjectId: 1, SubjectName: "Метематика", AverageMark: 8 },
         { SubjectId: 2, SubjectName: "Английский", AverageMark: 9 },
         { SubjectId: 3, SubjectName: "Русский язык", AverageMark: 8 },
-        { SubjectId: 4, SubjectName: "Фмзкультура", AverageMark: 9 },
+        { SubjectId: 4, SubjectName: "Физкультура", AverageMark: 9 },
         { SubjectId: 5, SubjectName: "ИЗО", AverageMark: 10 },
     ],
 };

@@ -1,4 +1,5 @@
-const constants = require('../utils/constants')
+const constants = require('../utils/constants');
+const StatusCodes = require('http-status-codes');
 
 const getUser = (req, res) => {
   const token = req.body.token;
@@ -8,15 +9,12 @@ const getUser = (req, res) => {
 
 
 function getUserData(token) {
-
-  const unauthorized = 401;
-  const ok = 200;
   const response = {
-    status: ok,
+    status: StatusCodes.StatusCodes.OK,
     data: {}
   }
   if (token !== constants.CONSTANTS.MOCK_TOKEN) {
-    response.status = unauthorized;
+    response.status = StatusCodes.StatusCodes.UNAUTHORIZED;
     return response;
   } else {
     response.data = {

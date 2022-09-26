@@ -1,42 +1,44 @@
-const constants = require('../utils/constants')
+const constants = require('../utils/constants');
+const StatusCodes = require('http-status-codes');
 
 const getMarks = (req, res) => {
   const token = req.body.token;
   const subjectId = req.body.subjectId;
-  const isRightSubjectId = checkSubjectId(subjectId);
+  const isRightToken = checkToken(token);
 
-  if (!isRightSubjectId) {
-    const responseData = { message: "invalid subject id" };
+  if (!isRightToken) {
+    const responseData = { message: "invalid token" };
     res.status(404).send(responseData);
   } else {
-    const responseData = getMarksBySubjectId(subjectId, token);
+    const responseData = getMarksBySubjectId(subjectId);
     res.status(responseData.status).send(responseData.marksData);
   }
 
 }
 
-function checkSubjectId(id) {
-  if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
+function checkToken(token) {
+  if (token === constants.CONSTANTS.MOCK_TOKEN) {
     return true;
   } else {
     return false;
   }
 }
 
-function getMarksBySubjectId(id, token) {
-  const statusOk = 200;
-  const statusUnauthorized = 401;
+function getMarksBySubjectId(id) {
   const response = {
-    marksData: {
+    marksData: {},
+    status: StatusCodes.StatusCodes.UNAUTHORIZED,
+  };
+
+  if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
+    response.marksData = {
       SubjectId: id,
       SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
       AverageMark: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].AverageMark,
       Marks: []
-    },
-    status: statusOk,
-  };
+    }
+    response.status = StatusCodes.StatusCodes.OK;
 
-  if (token === constants.CONSTANTS.MOCK_TOKEN) {
     switch (id) {
       case 1:
         response.marksData.Marks = [8, 9];
@@ -56,12 +58,10 @@ function getMarksBySubjectId(id, token) {
         response.marksData.Marks = [10];
         break
       default:
-        return
+        return {}
     }
-  } else {
-    response.marksData = {};
-    response.status = statusUnauthorized;
   }
+
   return response;
 };
 

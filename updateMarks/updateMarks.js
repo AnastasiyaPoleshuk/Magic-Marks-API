@@ -1,60 +1,46 @@
-const constants = require('../utils/constants')
+const constants = require('../utils/constants');
+const StatusCodes = require('http-status-codes');
 
 const updateMarks = (req, res) => {
   const token = req.body.token;
   const subjectId = req.body.subjectId;
   const marks = req.body.marks;
-  const isRightSubjectId = checkSubjectId(subjectId);
+  const isRightToken = checkToken(token);
 
-  if (!isRightSubjectId) {
-    const responseData = { message: "invalid subject id" };
+  if (!isRightToken) {
+    const responseData = { message: "invalid token" };
     res.status(404).send(responseData);
   } else {
-    const responseData = getMarksBySubjectId(subjectId, marks, token);
+    const responseData = getMarksBySubjectId(subjectId, marks);
     res.status(responseData.status).send(responseData.marksData);
   }
 
 }
 
-function checkSubjectId(id) {
-  if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
-    return true;
-  } else {
+function checkToken(token) {
+  if (token !== constants.CONSTANTS.MOCK_TOKEN) {
     return false;
   }
+  return true;
 }
 
-function getMarksBySubjectId(id, marks, token) {
-  const statusOk = 200;
-  const statusUnauthorized = 401;
+function getMarksBySubjectId(id, marks) {
   const response = {
     marksData: {},
-    status: statusUnauthorized,
+    status: StatusCodes.StatusCodes.UNAUTHORIZED,
   };
-  if (token === constants.CONSTANTS.MOCK_TOKEN) {
-    const averageMark = calcAverageMark(marks);
+  if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
+    const digits = 1;
+    const average = marks.reduce((prev, curr) => prev + curr) / marks.length;
     response.marksData = {
       SubjectId: id,
       SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
-      AverageMark: averageMark,
+      AverageMark: average.toFixed(digits),
       Marks: marks
     };
-    response.status = statusOk;
+    response.status = StatusCodes.StatusCodes.OK;
   }
   return response;
 };
-
-function calcAverageMark(marks) {
-  let sumOfMarks = 0;
-  const digits = 1;
-
-  marks.forEach(mark => {
-    sumOfMarks += mark;
-  });
-
-  const averageMark = sumOfMarks / marks.length;
-
-  return averageMark.toFixed(digits);
-}
 
 module.exports = updateMarks;

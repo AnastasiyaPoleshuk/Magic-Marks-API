@@ -2,7 +2,7 @@ const constants = require('../utils/constants');
 const StatusCodes = require('http-status-codes');
 
 const getUser = (req, res) => {
-  const token = req.body.token;
+  const token = req;
   const responseData = getUserData(token);
   res.status(responseData.status).send(responseData.data);
 }

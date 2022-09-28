@@ -8,7 +8,7 @@ const getMarks = (req, res) => {
 
   if (!isRightToken) {
     const responseData = { message: "invalid token" };
-    res.status(404).send(responseData);
+    res.status(StatusCodes.StatusCodes.UNAUTHORIZED).send(responseData);
   } else {
     const responseData = getMarksBySubjectId(subjectId);
     res.status(responseData.status).send(responseData.marksData);

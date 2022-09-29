@@ -15,7 +15,7 @@ const router = (app) => {
         response.send(responseData);
     });
     app.get('/user', (request, response) => {
-        const responseData = getUser(request, response);
+        const responseData = getUser(request.query.token, response);
         response.send(responseData);
     });
 

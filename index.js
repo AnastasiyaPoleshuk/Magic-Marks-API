@@ -13,7 +13,8 @@ app.use(bodyParser.urlencoded({
     extended: true,
 }));
 
-app.use(cors())
+app.use(cors());
+
 router(app);
 
 const server = app.listen(process.env.PORT || constants.CONSTANTS.PORT, (error) => {

@@ -8,8 +8,7 @@ const updateMarks = (req, res) => {
   const isRightToken = checkToken(token);
 
   if (!isRightToken) {
-    const responseData = { message: "invalid token" };
-    res.status(404).send(responseData);
+    res.status(StatusCodes.StatusCodes.UNAUTHORIZED).send({});
   } else {
     const responseData = getMarksBySubjectId(subjectId, marks);
     res.status(responseData.status).send(responseData.marksData);
@@ -30,12 +29,11 @@ function getMarksBySubjectId(id, marks) {
     status: StatusCodes.StatusCodes.UNAUTHORIZED,
   };
   if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
-    const digits = 1;
     const average = marks.reduce((prev, curr) => prev + curr) / marks.length;
     response.marksData = {
       SubjectId: id,
       SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
-      AverageMark: average.toFixed(digits),
+      AverageMark: average.toFixed(constants.CONSTANTS.DIGITS),
       Marks: marks
     };
     response.status = StatusCodes.StatusCodes.OK;

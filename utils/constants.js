@@ -17,6 +17,7 @@ const CONSTANTS = {
     { SubjectId: 4, SubjectName: "Фмзкультура", AverageMark: 9 },
     { SubjectId: 5, SubjectName: "ИЗО", AverageMark: 10 },
   ],
+  DIGITS: 1,
 };
 
 module.exports.CONSTANTS = CONSTANTS;

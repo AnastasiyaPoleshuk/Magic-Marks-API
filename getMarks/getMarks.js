@@ -2,8 +2,9 @@ const constants = require('../utils/constants');
 const StatusCodes = require('http-status-codes');
 
 const getMarks = (req, res) => {
-  const token = req.body.token;
-  const subjectId = req.body.subjectId;
+  console.log(req);
+  const token = req.token;
+  const subjectId = +req.subjectId;
   const isRightToken = checkToken(token);
 
   if (!isRightToken) {
@@ -61,7 +62,6 @@ function getMarksBySubjectId(id) {
         return {}
     }
   }
-
   return response;
 };
 

@@ -3,7 +3,6 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const router = require('./router/router')
 const constants = require('./utils/constants');
-const cors = require("cors");
 
 const app = express();
 

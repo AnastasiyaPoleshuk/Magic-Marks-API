@@ -17,6 +17,13 @@ const CONSTANTS = {
     { SubjectId: 4, SubjectName: "Физкультура", AverageMark: 9 },
     { SubjectId: 5, SubjectName: "ИЗО", AverageMark: 10 },
   ],
+  MOCK_MARKS: [
+    { SubjectId: 1, Marks: [8, 9] },
+    { SubjectId: 2, Marks: [9] },
+    { SubjectId: 3, Marks: [8, 7, 8] },
+    { SubjectId: 4, Marks: [9, 9, 10] },
+    { SubjectId: 5, Marks: [10, 9, 10] },
+  ],
   DIGITS: 1,
 };
 

@@ -23,6 +23,7 @@ function getUserData(token) {
       FirstName: "Светлана",
       LastName: "Полешук",
       Class: "1",
+      AverageMark: averageForAllSubjects(),
       Subjects: [
         { SubjectId: 1, SubjectName: "Математика", AverageMark: average(1) },
         { SubjectId: 2, SubjectName: "Английский", AverageMark: average(2) },
@@ -31,13 +32,24 @@ function getUserData(token) {
         { SubjectId: 5, SubjectName: "ИЗО", AverageMark: average(5) },
       ],
     }
-    
+
     return response;
   }
 };
 
 function average(id) {
   const marks = constants.CONSTANTS.MOCK_MARKS[id - 1].Marks;
+  const average = marks.reduce((prev, curr) => prev + curr) / marks.length;
+  return average.toFixed(constants.CONSTANTS.DIGITS)
+}
+
+function averageForAllSubjects() {
+  const marks = constants.CONSTANTS.MOCK_MARKS[0].Marks.concat(
+    constants.CONSTANTS.MOCK_MARKS[1].Marks,
+    constants.CONSTANTS.MOCK_MARKS[2].Marks,
+    constants.CONSTANTS.MOCK_MARKS[3].Marks,
+    constants.CONSTANTS.MOCK_MARKS[4].Marks,
+  );
   const average = marks.reduce((prev, curr) => prev + curr) / marks.length;
   return average.toFixed(constants.CONSTANTS.DIGITS)
 }

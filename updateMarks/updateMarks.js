@@ -1,4 +1,5 @@
 const constants = require('../utils/constants');
+const average = require('../utils/average');
 const StatusCodes = require('http-status-codes');
 
 const updateMarks = (req, res) => {
@@ -29,11 +30,10 @@ function getMarksBySubjectId(id, marks) {
     status: StatusCodes.StatusCodes.UNAUTHORIZED,
   };
   if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
-    const average = marks.reduce((prev, curr) => prev + curr) / marks.length;
     response.marksData = {
       SubjectId: id,
       SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
-      AverageMark: average.toFixed(constants.CONSTANTS.DIGITS),
+      AverageMark: average(marks, constants.CONSTANTS.DIGITS),
       Marks: marks
     };
     response.status = StatusCodes.StatusCodes.OK;

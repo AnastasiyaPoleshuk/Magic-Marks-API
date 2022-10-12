@@ -7,6 +7,8 @@ const updateMarks = (req, res) => {
   const marks = req.body.marks;
   const isRightToken = checkToken(token);
 
+  constants.CONSTANTS.MOCK_MARKS[subjectId - 1].Marks = marks;
+
   if (!isRightToken) {
     res.status(StatusCodes.StatusCodes.UNAUTHORIZED).send({});
   } else {
@@ -34,7 +36,7 @@ function getMarksBySubjectId(id, marks) {
       SubjectId: id,
       SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
       AverageMark: average.toFixed(constants.CONSTANTS.DIGITS),
-      Marks: marks
+      Marks: marks,
     };
     response.status = StatusCodes.StatusCodes.OK;
   }

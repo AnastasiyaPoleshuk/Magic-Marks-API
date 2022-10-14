@@ -24,15 +24,22 @@ function getUserData(token) {
       LastName: "Полешук",
       Class: "1",
       Subjects: [
-        { SubjectId: 1, SubjectName: "Математика", AverageMark: 8 },
-        { SubjectId: 2, SubjectName: "Английский", AverageMark: 9 },
-        { SubjectId: 3, SubjectName: "Русский язык", AverageMark: 8 },
-        { SubjectId: 4, SubjectName: "Физкультура", AverageMark: 9 },
-        { SubjectId: 5, SubjectName: "ИЗО", AverageMark: 10 },
+        { SubjectId: 1, SubjectName: "Математика", AverageMark: average(1) },
+        { SubjectId: 2, SubjectName: "Английский", AverageMark: average(2) },
+        { SubjectId: 3, SubjectName: "Русский язык", AverageMark: average(3) },
+        { SubjectId: 4, SubjectName: "Физкультура", AverageMark: average(4) },
+        { SubjectId: 5, SubjectName: "ИЗО", AverageMark: average(5) },
       ],
     }
+    
     return response;
   }
 };
+
+function average(id) {
+  const marks = constants.CONSTANTS.MOCK_MARKS[id - 1].Marks;
+  const average = marks.reduce((prev, curr) => prev + curr) / marks.length;
+  return average.toFixed(constants.CONSTANTS.DIGITS)
+}
 
 module.exports = getUser;

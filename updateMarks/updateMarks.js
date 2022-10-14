@@ -8,6 +8,8 @@ const updateMarks = (req, res) => {
   const marks = req.body.marks;
   const isRightToken = checkToken(token);
 
+  constants.CONSTANTS.MOCK_MARKS[subjectId - 1].Marks = marks;
+
   if (!isRightToken) {
     res.status(StatusCodes.StatusCodes.UNAUTHORIZED).send({});
   } else {

@@ -3,9 +3,15 @@ const average = require('../utils/average');
 const StatusCodes = require('http-status-codes');
 
 const getUser = (req, res) => {
+  if (!req) {
+    res.sendStatus(400);
+    return;
+  }
+
   const token = req;
   const responseData = getUserData(token);
   res.status(responseData.status).send(responseData.data);
+  return;
 }
 
 
@@ -39,7 +45,6 @@ function getUserData(token) {
         { SubjectId: 5, SubjectName: "ИЗО", AverageMark: average(constants.CONSTANTS.MOCK_MARKS[4].Marks, constants.CONSTANTS.DIGITS) },
       ],
     }
-
     return response;
   }
 };

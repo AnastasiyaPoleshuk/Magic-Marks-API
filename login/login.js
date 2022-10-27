@@ -1,49 +1,61 @@
-const constants = require('../utils/constants');
+const StatusCodes = require('http-status-codes');
 const bcrypt = require('bcrypt');
-const getUserByDatabase = require('../queries/queries');
+const jwt = require('jsonwebtoken');
+const db = require('../queries/queries');
 
-const loginUser = (req, res) => {
+const loginUser = async (req, res) => {
   if (!req.body) {
-    res.sendStatus(400);
-    return;
+    return res.sendStatus(400);
   }
 
   const userEmail = req.body.email;
   const userPassword = req.body.password;
   const user = { email: userEmail, password: userPassword };
 
-  const checkResponse = checkUserCredentials(user)
-  res.status(checkResponse.status).send(checkResponse.responseData);
-  return;
+  const response = await checkUserCredentials(user, res)
+    .then((data) => {
+      return data;
+    })
+
+  return response;
+
 };
 
-function checkUserCredentials(userData) {
+async function checkUserCredentials(userData) {
   const responseData = {
     isAuthenticated: true,
     accsess_token: '',
   };
-  let status;
+  let status = StatusCodes.StatusCodes.OK;
 
-  getUserByDatabase()
+  const { rows } = await db.queryWithParams('SELECT * FROM "user" where email=$1', [userData.email]);
+
+  const compare = bcrypt.compareSync(userData.password, rows[0].passwordhash);
 
   if (
-    userData.email === constants.CONSTANTS.MOCK_USER.Email &&
-    userData.password === constants.CONSTANTS.MOCK_USER.Password
+    userData.email === rows[0].email &&
+    compare
   ) {
-    const salt = bcrypt.genSaltSync(10);
-    const passwordToSave = bcrypt.hashSync(`${userData.password}`, salt);
-    responseData.accsess_token = createToken();
-    status = 200;
+    responseData.accsess_token = createToken(rows[0]);
+    status = StatusCodes.StatusCodes.OK;
   } else {
     responseData.isAuthenticated = false;
-    status = 401;
+    status = StatusCodes.StatusCodes.UNAUTHORIZED;
   };
 
   return { responseData, status };
 }
 
-function createToken() {
-  return constants.CONSTANTS.MOCK_TOKEN;
+function createToken(user) {
+  const data = {
+    _id: user.userid,
+    name: user.firstname,
+    email: user.email,
+  };
+
+  const signature = `${Date.now()}`;
+
+  return jwt.sign({ data, }, signature);
 }
 
 module.exports = loginUser;

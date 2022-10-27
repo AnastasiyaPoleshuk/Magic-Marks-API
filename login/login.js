@@ -38,6 +38,7 @@ async function checkUserCredentials(userData) {
   ) {
     responseData.accsess_token = createToken(rows[0]);
     status = StatusCodes.StatusCodes.OK;
+    db.queryWithParams('INSERT INTO "login" VALUES($1, $2, $3)', [+rows[0].userid, responseData.accsess_token, createExpirationTime()]);
   } else {
     responseData.isAuthenticated = false;
     status = StatusCodes.StatusCodes.UNAUTHORIZED;
@@ -53,9 +54,18 @@ function createToken(user) {
     email: user.email,
   };
 
-  const signature = `${Date.now()}`;
+  const signature = `${new Date()}`;
 
   return jwt.sign({ data, }, signature);
+}
+
+function createExpirationTime() {
+  const dateNow = new Date();
+  dateNow.setMinutes(dateNow.getMinutes() + 30);
+  const currentDate = dateNow.toLocaleDateString().split('/');
+  const currentTime = dateNow.toLocaleTimeString().slice(0, -6);
+  const expipation = new Date(`${currentDate[2]}-${currentDate[0]}-${currentDate[1]}T${currentTime}`);
+  return expipation;
 }
 
 module.exports = loginUser;

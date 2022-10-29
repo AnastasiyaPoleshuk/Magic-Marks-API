@@ -1,52 +1,79 @@
+const userTokenCheck = require('../utils/userTokenCheck');
 const constants = require('../utils/constants');
+const getUserMarks = require('../utils/getUserMarks');
 const average = require('../utils/average');
 const StatusCodes = require('http-status-codes');
+const db = require('../queries/queries');
 
-const getUser = (req, res) => {
+const getUser = async (req, res) => {
   if (!req) {
-    res.sendStatus(400);
-    return;
+    return res.sendStatus(400);
   }
 
-  const token = req;
-  const responseData = getUserData(token);
-  res.status(responseData.status).send(responseData.data);
-  return;
+  const token = req.query.token;
+
+  const response = await getUserData(token)
+    .then((data) => {
+      return data;
+    })
+
+  return response;
 }
 
 
-function getUserData(token) {
+async function getUserData(token) {
   const response = {
     status: StatusCodes.StatusCodes.OK,
     data: {}
   }
-  if (token !== constants.CONSTANTS.MOCK_TOKEN) {
+  const userid = await userTokenCheck(token);
+
+  if (!userid) {
     response.status = StatusCodes.StatusCodes.UNAUTHORIZED;
     return response;
   } else {
-    const marks = constants.CONSTANTS.MOCK_MARKS[0].Marks.concat(
-      constants.CONSTANTS.MOCK_MARKS[1].Marks,
-      constants.CONSTANTS.MOCK_MARKS[2].Marks,
-      constants.CONSTANTS.MOCK_MARKS[3].Marks,
-      constants.CONSTANTS.MOCK_MARKS[4].Marks,
-    );
+    const { rows: userdb } = await db.queryWithParams('SELECT * FROM "user" where userid=$1', [userid]);
+    const userSubjects = await getSubjectsInfo(userdb[0].userid);
+
+    let averageMarks = [];
+    userSubjects.forEach(item => {
+      averageMarks = [...averageMarks, +item.AverageMark]
+    })
+
     response.data = {
-      UserId: "1",
-      Email: constants.CONSTANTS.MOCK_USER.Email,
-      FirstName: "Светлана",
-      LastName: "Полешук",
-      Class: "1",
-      AverageMark: average(marks, constants.CONSTANTS.DIGITS),
-      Subjects: [
-        { SubjectId: 1, SubjectName: "Математика", AverageMark: average(constants.CONSTANTS.MOCK_MARKS[0].Marks, constants.CONSTANTS.DIGITS) },
-        { SubjectId: 2, SubjectName: "Английский", AverageMark: average(constants.CONSTANTS.MOCK_MARKS[1].Marks, constants.CONSTANTS.DIGITS) },
-        { SubjectId: 3, SubjectName: "Русский язык", AverageMark: average(constants.CONSTANTS.MOCK_MARKS[2].Marks, constants.CONSTANTS.DIGITS) },
-        { SubjectId: 4, SubjectName: "Физкультура", AverageMark: average(constants.CONSTANTS.MOCK_MARKS[3].Marks, constants.CONSTANTS.DIGITS) },
-        { SubjectId: 5, SubjectName: "ИЗО", AverageMark: average(constants.CONSTANTS.MOCK_MARKS[4].Marks, constants.CONSTANTS.DIGITS) },
-      ],
+      UserId: `${userdb[0].userid}`,
+      Email: userdb[0].email,
+      FirstName: userdb[0].firstname,
+      LastName: userdb[0].lastname,
+      Class: userdb[0].Class,
+      AverageMark: average(averageMarks, constants.CONSTANTS.DIGITS),
+      Subjects: userSubjects,
     }
+
     return response;
   }
 };
+
+async function getSubjectsInfo(userId) {
+  let subjectsArr = [];
+  const { rows: subjectsDb } = await db.query('SELECT * FROM "subjects"');
+
+  for (const subjectItem of subjectsDb) {
+    const subject = await createSubjectObject(userId, subjectItem)
+    subjectsArr = [...subjectsArr, subject];
+  }
+
+  return subjectsArr;
+}
+
+async function createSubjectObject(userId, subjectItem) {
+  const marks = await getUserMarks(userId, subjectItem.id);
+  let subject = {
+    SubjectId: +subjectItem.id,
+    SubjectName: subjectItem.name,
+    AverageMark: average(marks, constants.CONSTANTS.DIGITS)
+  }
+  return subject;
+}
 
 module.exports = getUser;

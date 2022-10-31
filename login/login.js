@@ -1,6 +1,7 @@
 const StatusCodes = require('http-status-codes');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 const db = require('../queries/queries');
 
 const loginUser = async (req, res) => {
@@ -60,12 +61,8 @@ function createToken(user) {
 }
 
 function createExpirationTime() {
-  const dateNow = new Date();
-  dateNow.setMinutes(dateNow.getMinutes() + 30);
-  const currentDate = dateNow.toLocaleDateString().split('/');
-  const currentTime = dateNow.toLocaleTimeString().slice(0, -6);
-  const expipation = new Date(`${currentDate[2]}-${currentDate[0]}-${currentDate[1]}T${currentTime}`);
-  return expipation;
+  const expiration = moment().add(30, 'minute');
+  return expiration;
 }
 
 module.exports = loginUser;

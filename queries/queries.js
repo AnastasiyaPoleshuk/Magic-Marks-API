@@ -11,7 +11,33 @@ const pool = new Pool({
   }
 });
 
+const transaction = async (userId, subjectId, marks) => {
+  const client = await pool.connect();
+  let isSuccess = false;
+
+  try {
+    await client.query('BEGIN');
+
+    const queryDeleteText = 'DELETE FROM "marks" WHERE userid = $1 AND subjectid=$2;';
+    await client.query(queryDeleteText, [userId, subjectId]);
+
+    const queryInsertText = 'INSERT INTO "marks" VALUES($1, $2, $3)';
+    for (const mark of marks) {
+      await client.query(queryInsertText, [userId, subjectId, mark])
+    }
+
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK');
+    return isSuccess;
+  } finally {
+    client.release();
+  }
+  return isSuccess = true;
+}
+
 module.exports = {
   queryWithParams: (text, params) => pool.query(text, params),
   query: (text) => pool.query(text),
+  transaction: (userId, subjectId, mark) => transaction(userId, subjectId, mark),
 }

@@ -19,10 +19,12 @@ const router = (app) => {
         response.status(responseData.status).send(responseData.responseData);
       })
   });
-  app.get('/marks', (request, response) => {
-    const responseData = getMarks(request.query, response);
-    response.send(responseData);
-  });
+  app.get('/marks', (async (request, response) => {
+    getMarks(request.query, response)
+      .then((responseData) => {
+        response.status(responseData.status).send(responseData.marksData);
+      });
+  }));
   app.put('/marks', (request, response) => {
     const responseData = updateMarks(request, response);
     response.send(responseData);

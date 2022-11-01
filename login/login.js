@@ -6,7 +6,7 @@ const db = require('../queries/queries');
 
 const loginUser = async (req, res) => {
   if (!req.body) {
-    return res.sendStatus(400);
+    return res.sendStatus(StatusCodes.StatusCodes.BAD_REQUEST);
   }
 
   const userEmail = req.body.email;
@@ -29,17 +29,17 @@ async function checkUserCredentials(userData) {
   };
   let status = StatusCodes.StatusCodes.OK;
 
-  const { rows } = await db.queryWithParams('SELECT * FROM "user" where email=$1', [userData.email]);
+  const { rows: userDb } = await db.queryWithParams('SELECT * FROM "user" where email=$1', [userData.email]);
 
-  const compare = bcrypt.compareSync(userData.password, rows[0].passwordhash);
+  const compare = bcrypt.compareSync(userData.password, userDb[0].passwordhash);
 
   if (
-    userData.email === rows[0].email &&
+    userData.email === userDb[0].email &&
     compare
   ) {
-    responseData.accsess_token = createToken(rows[0]);
+    responseData.accsess_token = createToken(userDb[0]);
     status = StatusCodes.StatusCodes.OK;
-    db.queryWithParams('INSERT INTO "login" VALUES($1, $2, $3)', [+rows[0].userid, responseData.accsess_token, createExpirationTime()]);
+    db.queryWithParams('INSERT INTO "login" VALUES($1, $2, $3)', [+userDb[0].userid, responseData.accsess_token, createExpirationTime()]);
   } else {
     responseData.isAuthenticated = false;
     status = StatusCodes.StatusCodes.UNAUTHORIZED;

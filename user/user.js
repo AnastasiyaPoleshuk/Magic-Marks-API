@@ -7,7 +7,7 @@ const db = require('../queries/queries');
 
 const getUser = async (req, res) => {
   if (!req) {
-    return res.sendStatus(400);
+    return res.sendStatus(StatusCodes.StatusCodes.BAD_REQUEST);
   }
 
   const token = req.query.token;

@@ -6,7 +6,7 @@ const db = require('../queries/queries');
 
 const loginUser = async (req, res) => {
   if (!req.body) {
-    return res.sendStatus(400);
+    return res.sendStatus(StatusCodes.StatusCodes.BAD_REQUEST);
   }
 
   const userEmail = req.body.email;

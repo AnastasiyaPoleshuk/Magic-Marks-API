@@ -11,7 +11,7 @@ const pool = new Pool({
   }
 });
 
-const transaction = async (userId, subjectId, marks) => {
+const updateMarksInDB = async (userId, subjectId, marks) => {
   const client = await pool.connect();
   let isSuccess = false;
 
@@ -39,5 +39,5 @@ const transaction = async (userId, subjectId, marks) => {
 module.exports = {
   queryWithParams: (text, params) => pool.query(text, params),
   query: (text) => pool.query(text),
-  transaction: (userId, subjectId, mark) => transaction(userId, subjectId, mark),
+  updateMarksInDB: (userId, subjectId, mark) => updateMarksInDB(userId, subjectId, mark),
 }

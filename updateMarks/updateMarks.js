@@ -31,11 +31,11 @@ async function getMarksBySubjectId(subjectId, marks, token) {
     return response;
   };
 
-  const { rows: subjectsDb } = await db.query('SELECT * FROM "subjects"');
+  const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [subjectId]);
 
   if (subjectId > 0 && subjectId <= subjectsDb.length) {
 
-    const transactionResponse = await db.transaction(
+    const transactionResponse = await db.updateMarksInDB(
       userId,
       subjectId,
       marks

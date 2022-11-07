@@ -29,14 +29,14 @@ async function getMarksBySubjectId(SubjectId, token) {
     return response;
   };
 
-  const { rows: subjectsDb } = await db.query('SELECT * FROM "subjects"');
+  const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [SubjectId]);
 
   if (SubjectId > 0 && SubjectId <= subjectsDb.length) {
     const marks = await getUserMarks(userId, SubjectId);
 
     response.marksData = {
       SubjectId: SubjectId,
-      SubjectName: subjectsDb[SubjectId - 1].name,
+      SubjectName: subjectsDb[0].name,
       AverageMark: average(marks, constants.CONSTANTS.DIGITS),
       Marks: marks,
     }

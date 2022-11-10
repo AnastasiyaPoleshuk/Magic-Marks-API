@@ -8,7 +8,6 @@ const StatusCodes = require('http-status-codes');
 const getMarks = async (req, res) => {
   const token = req.token;
   const subjectId = +req.subjectId;
-
   const response = await getMarksBySubjectId(subjectId, token)
     .then((data) => {
       return data;
@@ -31,7 +30,7 @@ async function getMarksBySubjectId(SubjectId, token) {
 
   const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [SubjectId]);
 
-  if (SubjectId > 0 && SubjectId <= subjectsDb.length) {
+  if (subjectsDb[0]) {
     const marks = await getUserMarks(userId, SubjectId);
 
     response.marksData = {
@@ -41,8 +40,9 @@ async function getMarksBySubjectId(SubjectId, token) {
       Marks: marks,
     }
     response.status = StatusCodes.StatusCodes.OK;
-
   }
+
+  
   return response;
 };
 

@@ -31,11 +31,11 @@ async function checkUserCredentials(userData) {
 
   const { rows } = await db.queryWithParams('SELECT * FROM "user" where email=$1', [userData.email]);
 
-  const compare = bcrypt.compareSync(userData.password, rows[0].passwordhash);
+  const isValidPassword = bcrypt.compareSync(userData.password, rows[0].passwordhash);
 
   if (
     userData.email === rows[0].email &&
-    compare
+    isValidPassword 
   ) {
     responseData.accsess_token = createToken(rows[0]);
     status = StatusCodes.StatusCodes.OK;

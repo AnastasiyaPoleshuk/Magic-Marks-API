@@ -1,44 +1,60 @@
 const constants = require('../utils/constants');
 const average = require('../utils/average');
+const userTokenCheck = require('../utils/userTokenCheck');
+const db = require('../queries/queries');
+const getUserMarks = require('../utils/getUserMarks');
 const StatusCodes = require('http-status-codes');
 
-const updateMarks = (req, res) => {
+const updateMarks = async (req, res) => {
   const token = req.body.token;
   const subjectId = req.body.subjectId;
   const marks = req.body.marks;
-  const isRightToken = checkToken(token);
 
-  constants.CONSTANTS.MOCK_MARKS[subjectId - 1].Marks = marks;
+  const response = await getMarksBySubjectId(subjectId, marks, token)
+    .then((data) => {
+      return data;
+    })
 
-  if (!isRightToken) {
-    res.status(StatusCodes.StatusCodes.UNAUTHORIZED).send({});
-  } else {
-    const responseData = getMarksBySubjectId(subjectId, marks);
-    res.status(responseData.status).send(responseData.marksData);
-  }
+  return response;
 
 }
 
-function checkToken(token) {
-  if (token !== constants.CONSTANTS.MOCK_TOKEN) {
-    return false;
-  }
-  return true;
-}
-
-function getMarksBySubjectId(id, marks) {
+async function getMarksBySubjectId(subjectId, marks, token) {
   const response = {
     marksData: {},
     status: StatusCodes.StatusCodes.UNAUTHORIZED,
   };
-  if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
-    response.marksData = {
-      SubjectId: id,
-      SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
-      AverageMark: average(marks, constants.CONSTANTS.DIGITS),
-      Marks: marks
-    };
-    response.status = StatusCodes.StatusCodes.OK;
+
+  const userId = await userTokenCheck(token);
+
+  if (!userId) {
+    return response;
+  };
+
+  const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [subjectId]);
+
+  if (subjectsDb[0]) {
+
+    const transactionResponse = await db.updateMarksInDB(
+      userId,
+      subjectId,
+      marks
+    );
+
+    if (transactionResponse) {
+      const dbMarks = await getUserMarks(userId, subjectId);
+
+      response.marksData = {
+        SubjectId: subjectId,
+        SubjectName: subjectsDb[0].name,
+        AverageMark: average(marks, constants.CONSTANTS.DIGITS),
+        Marks: dbMarks
+      };
+      response.status = StatusCodes.StatusCodes.OK;
+    } else {
+      response.status = StatusCodes.StatusCodes.INTERNAL_SERVER_ERROR;
+    }
+
   }
   return response;
 };

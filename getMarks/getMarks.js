@@ -1,47 +1,48 @@
 const constants = require('../utils/constants');
 const average = require('../utils/average');
+const userTokenCheck = require('../utils/userTokenCheck');
+const db = require('../queries/queries');
+const getUserMarks = require('../utils/getUserMarks');
 const StatusCodes = require('http-status-codes');
 
-const getMarks = (req, res) => {
+const getMarks = async (req, res) => {
   const token = req.token;
   const subjectId = +req.subjectId;
-  const isRightToken = checkToken(token);
+  const response = await getMarksBySubjectId(subjectId, token)
+    .then((data) => {
+      return data;
+    })
 
-  if (!isRightToken) {
-    res.status(StatusCodes.StatusCodes.UNAUTHORIZED).send({});
-  } else {
-    const responseData = getMarksBySubjectId(subjectId);
-    res.status(responseData.status).send(responseData.marksData);
-  }
-
+  return response;
 }
 
-function checkToken(token) {
-  if (token === constants.CONSTANTS.MOCK_TOKEN) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function getMarksBySubjectId(id) {
+async function getMarksBySubjectId(SubjectId, token) {
   const response = {
     marksData: {},
     status: StatusCodes.StatusCodes.UNAUTHORIZED,
   };
 
-  if (id > 0 && id <= constants.CONSTANTS.MOCK_SUBJECTS.length) {
-    const marks = constants.CONSTANTS.MOCK_MARKS[id - 1].Marks;
+  const userId = await userTokenCheck(token);
+
+  if (!userId) {
+    return response;
+  };
+
+  const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [SubjectId]);
+
+  if (subjectsDb[0]) {
+    const marks = await getUserMarks(userId, SubjectId);
 
     response.marksData = {
-      SubjectId: id,
-      SubjectName: constants.CONSTANTS.MOCK_SUBJECTS[id - 1].SubjectName,
+      SubjectId: SubjectId,
+      SubjectName: subjectsDb[0].name,
       AverageMark: average(marks, constants.CONSTANTS.DIGITS),
       Marks: marks,
     }
     response.status = StatusCodes.StatusCodes.OK;
-
   }
+
+  
   return response;
 };
 

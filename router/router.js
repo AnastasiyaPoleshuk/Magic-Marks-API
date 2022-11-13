@@ -27,10 +27,12 @@ const router = (app) => {
     const responseData = updateMarks(request, response);
     response.send(responseData);
   });
-  app.get('/user', (request, response) => {
-    const responseData = getUser(request.query.token, response);
-    response.send(responseData);
-  });
+  app.get('/user', (async (request, response) => {
+    getUser(request, response)
+      .then((responseData) => {
+        response.status(responseData.status).send(responseData.data);
+      });
+  }));
 
 };
 

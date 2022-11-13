@@ -33,7 +33,7 @@ async function getMarksBySubjectId(subjectId, marks, token) {
 
   const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [subjectId]);
 
-  if (subjectId > 0 && subjectId <= subjectsDb.length) {
+  if (subjectsDb[0]) {
 
     const transactionResponse = await db.updateMarksInDB(
       userId,
@@ -46,7 +46,7 @@ async function getMarksBySubjectId(subjectId, marks, token) {
 
       response.marksData = {
         SubjectId: subjectId,
-        SubjectName: subjectsDb[subjectId - 1].name,
+        SubjectName: subjectsDb[0].name,
         AverageMark: average(marks, constants.CONSTANTS.DIGITS),
         Marks: dbMarks
       };

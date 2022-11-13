@@ -4,7 +4,7 @@ const StatusCodes = require('http-status-codes');
 
 const getUser = (req, res) => {
   if (!req) {
-    res.sendStatus(400);
+    res.sendStatus(StatusCodes.StatusCodes.BAD_REQUEST);
     return;
   }
 

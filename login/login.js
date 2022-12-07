@@ -2,7 +2,8 @@ const StatusCodes = require('http-status-codes');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const db = require('../queries/queries');
+const GetDbInfo = require('../utils/dbQuery');
+const constants = require('../utils/constants');
 
 const loginUser = async (req, res) => {
   if (!req.body) {
@@ -17,7 +18,6 @@ const loginUser = async (req, res) => {
     .then((data) => {
       return data;
     })
-
   return response;
 
 };
@@ -29,17 +29,38 @@ async function checkUserCredentials(userData) {
   };
   let status = StatusCodes.StatusCodes.OK;
 
-  const { rows: userDb } = await db.queryWithParams('SELECT * FROM "user" where email=$1', [userData.email]);
-
-  const isValidPassword = bcrypt.compareSync(userData.password, userDb[0].passwordhash);
+  const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
+  const userDb = await GetDbInfo(`SELECT * FROM ${dBName} where email = '${userData.email}'`);
+  const isValidPassword = bcrypt.compareSync(userData.password, userDb.passwordhash);
 
   if (
-    userData.email === userDb[0].email &&
+    userData.email === userDb.email &&
     isValidPassword
   ) {
-    responseData.accsess_token = createToken(userDb[0]);
+    responseData.accsess_token = createToken(userDb);
     status = StatusCodes.StatusCodes.OK;
-    db.queryWithParams('INSERT INTO "login" VALUES($1, $2, $3)', [+userDb[0].userid, responseData.accsess_token, createExpirationTime()]);
+    const expiration = createExpirationTime();
+    const queryString = constants.CONSTANTS.DATABASE === "Postgree" ?
+      `INSERT INTO "login" VALUES(
+        ${+userDb.userid},
+        '${responseData.accsess_token}',
+        ${expiration}
+      )`:
+      `INSERT INTO "login" VALUES
+      (
+        ${+userDb.userid},
+        '${responseData.accsess_token}',
+        DATETIMEFROMPARTS ( 
+          ${expiration.year}, 
+          ${expiration.month}, 
+          ${expiration.day}, 
+          ${expiration.hour}, 
+          ${expiration.minute}, 
+          ${expiration.seconds}, 
+          ${expiration.milliseconds}
+        )
+      )`;
+    GetDbInfo(queryString);
   } else {
     responseData.isAuthenticated = false;
     status = StatusCodes.StatusCodes.UNAUTHORIZED;
@@ -60,9 +81,24 @@ function createToken(user) {
   return jwt.sign({ data, }, signature);
 }
 
-function createExpirationTime() {
-  const expiration = moment().add(30, 'minute');
-  return expiration;
+function createExpirationTime(db) {
+  if (db === "Postgree") {
+    const expiration = moment().add(30, 'minute');
+    return expiration;
+  } else {
+    const template = moment().add(30, 'minute');
+    const expiration = {
+      year: moment(template).year(),
+      month: moment(template).month(),
+      day: moment(template).date(),
+      hour: moment(template).hour(),
+      minute: moment(template).minute(),
+      seconds: moment(template).seconds(),
+      milliseconds: moment(template).milliseconds()
+    }
+    return expiration;
+  }
+
 }
 
 module.exports = loginUser;

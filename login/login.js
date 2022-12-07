@@ -31,24 +31,24 @@ async function checkUserCredentials(userData) {
 
   const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
   const userDb = await GetDbInfo(`SELECT * FROM ${dBName} where email = '${userData.email}'`);
-  const isValidPassword = bcrypt.compareSync(userData.password, userDb.passwordhash);
+  const isValidPassword = bcrypt.compareSync(userData.password, userDb[0].passwordhash);
 
   if (
-    userData.email === userDb.email &&
+    userData.email === userDb[0].email &&
     isValidPassword
   ) {
-    responseData.accsess_token = createToken(userDb);
+    responseData.accsess_token = createToken(userDb[0]);
     status = StatusCodes.StatusCodes.OK;
     const expiration = createExpirationTime();
     const queryString = constants.CONSTANTS.DATABASE === "Postgree" ?
       `INSERT INTO "login" VALUES(
-        ${+userDb.userid},
+        ${+userDb[0].userid},
         '${responseData.accsess_token}',
         ${expiration}
       )`:
       `INSERT INTO "login" VALUES
       (
-        ${+userDb.userid},
+        ${+userDb[0].userid},
         '${responseData.accsess_token}',
         DATETIMEFROMPARTS ( 
           ${expiration.year}, 

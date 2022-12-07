@@ -3,7 +3,7 @@ const constants = require('../utils/constants');
 const getUserMarks = require('../utils/getUserMarks');
 const average = require('../utils/average');
 const StatusCodes = require('http-status-codes');
-const db = require('../queries/queries');
+const GetDbInfo = require('../utils/dbQuery');
 
 const getUser = async (req, res) => {
   if (!req) {
@@ -32,7 +32,7 @@ async function getUserData(token) {
     response.status = StatusCodes.StatusCodes.UNAUTHORIZED;
     return response;
   } else {
-    const { rows: userdb } = await db.queryWithParams('SELECT * FROM "user" where userid=$1', [userid]);
+    const userdb = await GetDbInfo(`SELECT * FROM "user" where userid=${userid}`);
     const userSubjects = await getSubjectsInfo(userdb[0].userid);
 
     let averageMarks = [];
@@ -56,8 +56,7 @@ async function getUserData(token) {
 
 async function getSubjectsInfo(userId) {
   let subjectsArr = [];
-  const { rows: subjectsDb } = await db.query('SELECT * FROM "subjects"');
-
+  const subjectsDb = await GetDbInfo('SELECT * FROM "subjects"');
   for (const subjectItem of subjectsDb) {
     const subject = await createSubjectObject(userId, subjectItem)
     subjectsArr = [...subjectsArr, subject];

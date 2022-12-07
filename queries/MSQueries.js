@@ -19,7 +19,7 @@ const MSQuery = async (queryString) => {
     })
     .then(result => {
       let res;
-      result.recordset ? res = result.recordset[0] : res = null;
+      result.recordset ? res = result.recordset : res = null;
       return res;
     })
     .catch(err => {

@@ -1,7 +1,6 @@
 const constants = require('../../utils/constants');
 const average = require('../../utils/average');
 const userTokenCheck = require('../../utils/userTokenCheck');
-// const getUserMarks = require('../../utils/getUserMarks');
 const getSubjectsInfo = require('../../utils/getSubjectsInfo');
 const { GetDbInfo, updateUserTransaction } = require('../../utils/dbQuery');
 const StatusCodes = require('http-status-codes');

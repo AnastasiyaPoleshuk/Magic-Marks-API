@@ -5,6 +5,7 @@ const updateUser = require('../routs/updateUser/updateUser');
 const updateMarks = require('../routs/updateMarks/updateMarks');
 const getUser = require('../routs/user/user');
 const createUser = require('../routs/createUser/createUser');
+const deleteUser = require('../routs/deleteUser/deleteUser');
 
 
 const router = (app) => {
@@ -48,7 +49,13 @@ const router = (app) => {
   app.post('/user', (async (request, response) => {
     createUser(request, response)
       .then((responseData) => {
-        response.status(responseData.status).send(responseData.data);
+        response.status(responseData.status).send(responseData.message);
+      });
+  }));
+  app.delete('/user', (async (request, response) => {
+    deleteUser(request.query, response)
+      .then((responseData) => {
+        response.status(responseData.status).send(responseData.message);
       });
   }));
 

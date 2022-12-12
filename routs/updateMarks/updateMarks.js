@@ -1,9 +1,8 @@
-const constants = require('../utils/constants');
-const average = require('../utils/average');
-const userTokenCheck = require('../utils/userTokenCheck');
-const db = require('../queries/queries');
-const getUserMarks = require('../utils/getUserMarks');
-const GetDbInfo = require('../utils/dbQuery');
+const constants = require('../../utils/constants');
+const average = require('../../utils/average');
+const userTokenCheck = require('../../utils/userTokenCheck');
+const getUserMarks = require('../../utils/getUserMarks');
+const { GetDbInfo, updateMarksTransaction } = require('../../utils/dbQuery');
 const StatusCodes = require('http-status-codes');
 
 const updateMarks = async (req, res) => {
@@ -36,8 +35,7 @@ async function getMarksBySubjectId(subjectId, marks, token) {
 
   if (subjectsDb[0]) {
 
-    const transactionResponse = await GetDbInfo(
-      '',
+    const transactionResponse = await updateMarksTransaction(
       userId,
       subjectId,
       marks

@@ -25,6 +25,7 @@ const CONSTANTS = {
     { SubjectId: 5, Marks: [10, 9, 10] },
   ],
   DIGITS: 1,
+  FIRST_USER_IN_DB: 1,
   // DATABASE: 'Postgree',
   DATABASE: 'MSSQL',
 };

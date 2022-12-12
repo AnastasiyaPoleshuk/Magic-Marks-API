@@ -1,4 +1,4 @@
-const constants = require('../utils/constants')
+const constants = require('../../utils/constants')
 
 const getHealthStatus = () => {
   const response = {

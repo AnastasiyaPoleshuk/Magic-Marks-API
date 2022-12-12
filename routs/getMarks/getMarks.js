@@ -1,9 +1,9 @@
-const constants = require('../utils/constants');
-const average = require('../utils/average');
-const userTokenCheck = require('../utils/userTokenCheck');
-const getUserMarks = require('../utils/getUserMarks');
+const constants = require('../../utils/constants');
+const average = require('../../utils/average');
+const userTokenCheck = require('../../utils/userTokenCheck');
+const getUserMarks = require('../../utils/getUserMarks');
 const StatusCodes = require('http-status-codes');
-const GetDbInfo = require('../utils/dbQuery');
+const { GetDbInfo } = require('../../utils/dbQuery');
 
 const getMarks = async (req, res) => {
   const token = req.token;
@@ -42,7 +42,7 @@ async function getMarksBySubjectId(SubjectId, token) {
     response.status = StatusCodes.StatusCodes.OK;
   }
 
-  
+
   return response;
 };
 

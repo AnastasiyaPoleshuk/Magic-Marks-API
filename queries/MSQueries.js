@@ -33,8 +33,9 @@ const updateMarksInMSDb = async (userId, subjectId, marks) => {
   let isSuccess = false;
 
   const res = await sql.connect(MSconfig)
+  const transaction = new sql.Transaction(res);
   try {
-    const transaction = new sql.Transaction(res);
+
     await transaction.begin();
     const request = new sql.Request(transaction);
     await request.query(`DELETE FROM "marks" WHERE userid = ${userId} AND subjectid=${subjectId};`);
@@ -42,7 +43,36 @@ const updateMarksInMSDb = async (userId, subjectId, marks) => {
     for (const mark of marks) {
       await request.query(`INSERT INTO "marks" VALUES(${userId}, ${subjectId}, ${mark})`)
     }
-    
+
+    await transaction.commit()
+
+  } catch (err) {
+    transaction.rollback();
+    console.log("Error", err);
+    return isSuccess;
+  }
+  return isSuccess = true;
+}
+
+const updateUserInMSDb = async (userId, userInfo) => {
+  let isSuccess = false;
+
+  const res = await sql.connect(MSconfig)
+  const transaction = new sql.Transaction(res);
+  try {
+
+    await transaction.begin();
+    const request = new sql.Request(transaction);
+    await request.query(`DELETE FROM [user] WHERE userid = ${userId}`);
+    await request.query(`INSERT INTO [user] VALUES(
+      ${userId},
+      '${userInfo.email}', 
+      '${userInfo.firstname}', 
+      '${userInfo.lastname}', 
+      ${userInfo.Class},  
+      '${userInfo.passwordhash}'
+    )`)
+
     await transaction.commit()
 
   } catch (err) {
@@ -56,4 +86,5 @@ const updateMarksInMSDb = async (userId, subjectId, marks) => {
 module.exports = {
   msQuery: (queryString) => MSQuery(queryString),
   updateMarksInMSDb: (userId, subjectId, mark) => updateMarksInMSDb(userId, subjectId, mark),
+  updateUserInMSDb: (userId, userInfo) => updateUserInMSDb(userId, userInfo),
 }

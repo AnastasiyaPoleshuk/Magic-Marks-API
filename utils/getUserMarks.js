@@ -1,5 +1,4 @@
-const db = require('../queries/queries');
-const GetDbInfo = require('../utils/dbQuery');
+const { GetDbInfo } = require('../utils/dbQuery');
 
 const getUserMarks = async (userId, subjectId) => {
   let marksArr = [];

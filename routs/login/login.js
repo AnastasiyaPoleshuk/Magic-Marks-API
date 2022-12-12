@@ -2,8 +2,8 @@ const StatusCodes = require('http-status-codes');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const GetDbInfo = require('../utils/dbQuery');
-const constants = require('../utils/constants');
+const { GetDbInfo } = require('../../utils/dbQuery');
+const constants = require('../../utils/constants');
 
 const loginUser = async (req, res) => {
   if (!req.body) {

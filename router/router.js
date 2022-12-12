@@ -1,8 +1,10 @@
-const getHealthStatus = require('../healthcheck/healthcheck');
-const loginUser = require('../login/login');
-const getMarks = require('../getMarks/getMarks');
-const updateMarks = require('../updateMarks/updateMarks');
-const getUser = require('../user/user');
+const getHealthStatus = require('../routs/healthcheck/healthcheck');
+const loginUser = require('../routs/login/login');
+const getMarks = require('../routs/getMarks/getMarks');
+const updateUser = require('../routs/updateUser/updateUser');
+const updateMarks = require('../routs/updateMarks/updateMarks');
+const getUser = require('../routs/user/user');
+const createUser = require('../routs/createUser/createUser');
 
 
 const router = (app) => {
@@ -31,8 +33,20 @@ const router = (app) => {
         response.status(responseData.status).send(responseData.marksData);
       });
   }));
+  app.put('/user', (async (request, response) => {
+    updateUser(request, response)
+      .then((responseData) => {
+        response.status(responseData.status).send(responseData.user);
+      });
+  }));
   app.get('/user', (async (request, response) => {
     getUser(request, response)
+      .then((responseData) => {
+        response.status(responseData.status).send(responseData.data);
+      });
+  }));
+  app.post('/user', (async (request, response) => {
+    createUser(request, response)
       .then((responseData) => {
         response.status(responseData.status).send(responseData.data);
       });

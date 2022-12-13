@@ -3,6 +3,7 @@ const average = require('../utils/average');
 const userTokenCheck = require('../utils/userTokenCheck');
 const db = require('../queries/queries');
 const getUserMarks = require('../utils/getUserMarks');
+const GetDbInfo = require('../utils/dbQuery');
 const StatusCodes = require('http-status-codes');
 
 const updateMarks = async (req, res) => {
@@ -31,11 +32,12 @@ async function getMarksBySubjectId(subjectId, marks, token) {
     return response;
   };
 
-  const { rows: subjectsDb } = await db.queryWithParams('SELECT * FROM "subjects" WHERE id = $1', [subjectId]);
+  const subjectsDb = await GetDbInfo(`SELECT * FROM "subjects" WHERE id = ${subjectId}`);
 
   if (subjectsDb[0]) {
 
-    const transactionResponse = await db.updateMarksInDB(
+    const transactionResponse = await GetDbInfo(
+      '',
       userId,
       subjectId,
       marks

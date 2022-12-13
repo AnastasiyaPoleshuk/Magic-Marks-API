@@ -25,6 +25,8 @@ const CONSTANTS = {
     { SubjectId: 5, Marks: [10, 9, 10] },
   ],
   DIGITS: 1,
+  // DATABASE: 'Postgree',
+  DATABASE: 'MSSQL',
 };
 
 module.exports.CONSTANTS = CONSTANTS;

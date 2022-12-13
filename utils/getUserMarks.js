@@ -1,8 +1,9 @@
-const db = require('../queries/queries')
+const db = require('../queries/queries');
+const GetDbInfo = require('../utils/dbQuery');
 
 const getUserMarks = async (userId, subjectId) => {
   let marksArr = [];
-  const { rows: marks } = await db.queryWithParams('SELECT * FROM marks where userid = $1 and subjectid = $2', [userId, subjectId]);
+  const marks = await GetDbInfo(`SELECT * FROM marks WHERE userid = ${userId} and subjectid = ${subjectId}`);
   marks.forEach(mark => {
     marksArr = [...marksArr, +mark.marks];
   })

@@ -29,8 +29,8 @@ async function checkUserCredentials(userData) {
   };
   let status = StatusCodes.StatusCodes.OK;
 
-  const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
-  const userDb = await GetDbInfo(`SELECT * FROM ${dBName} where email = '${userData.email}'`);
+  const tableName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
+  const userDb = await GetDbInfo(`SELECT * FROM ${tableName} where email = '${userData.email}'`);
   const isValidPassword = bcrypt.compareSync(userData.password, userDb[0].passwordhash);
 
   if (

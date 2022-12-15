@@ -4,34 +4,46 @@ const getMarks = require('../getMarks/getMarks');
 const updateMarks = require('../updateMarks/updateMarks');
 const getUser = require('../user/user');
 
+// const express = require("express");
 
-const router = (app) => {
-  app.get('/healthcheck', (request, response) => {
+
+const router = (Router) => {
+  // const Router = express.Router();
+  
+  Router.get('/healthcheck', (request, response) => {
     const responseData = getHealthStatus();
     response.send(responseData);
   });
-  app.get('/', (request, response) => {
+  Router.get('/', (request, response) => {
     response.send('Magic Marks API');
   });
-  app.post('/login', async (request, response) => {
+
+  Router.get('/healthcheck', (request, response) => {
+    const responseData = getHealthStatus();
+    response.send(responseData);
+  });
+  Router.get('/', (request, response) => {
+    response.send('Magic Marks API');
+  });
+  Router.post('/login', async (request, response) => {
     loginUser(request, response)
       .then((responseData) => {
         response.status(responseData.status).send(responseData.responseData);
       })
   });
-  app.get('/marks', (async (request, response) => {
+  Router.get('/marks', (async (request, response) => {
     getMarks(request.query, response)
       .then((responseData) => {
         response.status(responseData.status).send(responseData.marksData);
       });
   }));
-  app.put('/marks', (async (request, response) => {
+  Router.put('/marks', (async (request, response) => {
     updateMarks(request, response)
       .then((responseData) => {
         response.status(responseData.status).send(responseData.marksData);
       });
   }));
-  app.get('/user', (async (request, response) => {
+  Router.get('/user', (async (request, response) => {
     getUser(request, response)
       .then((responseData) => {
         response.status(responseData.status).send(responseData.data);

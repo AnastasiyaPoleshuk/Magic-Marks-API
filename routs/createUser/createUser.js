@@ -31,8 +31,8 @@ async function setUser(user) {
   const res = await GetDbInfo(`INSERT INTO ${dBName} VALUES(
       ${userId},
       '${user.Email}',
-      '${user.FirstName}',
-      '${user.LastName}',
+      N'${user.FirstName}',
+      N'${user.LastName}',
       ${user.Class},
       '${hashedPassword}')`
   );

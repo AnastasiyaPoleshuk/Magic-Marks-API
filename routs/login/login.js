@@ -31,6 +31,13 @@ async function checkUserCredentials(userData) {
 
   const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
   const userDb = await GetDbInfo(`SELECT * FROM ${dBName} where email = '${userData.email}'`);
+  
+  if (!userDb[0]) {
+    responseData.isAuthenticated = false;
+    status = StatusCodes.StatusCodes.UNAUTHORIZED;
+    return { responseData, status };
+  }
+
   const isValidPassword = bcrypt.compareSync(userData.password, userDb[0].passwordhash);
 
   if (

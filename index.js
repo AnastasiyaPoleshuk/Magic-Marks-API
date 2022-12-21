@@ -6,8 +6,6 @@ const router = require('./router/router')
 const constants = require('./utils/constants');
 
 const app = express();
-const Router = express.Router();
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -15,9 +13,8 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(cors());
-app.use(`/.netlify/functions/api`, Router);
 
-router(Router);
+router(app);
 
 const server = app.listen(process.env.PORT || constants.CONSTANTS.PORT, (error) => {
     if (error) return console.log(`Error: ${error}`);

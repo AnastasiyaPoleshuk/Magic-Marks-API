@@ -26,6 +26,7 @@ async function checkUserCredentials(userData) {
   const responseData = {
     isAuthenticated: true,
     accsess_token: '',
+    data: {}
   };
   let status = StatusCodes.StatusCodes.OK;
 
@@ -60,7 +61,10 @@ async function checkUserCredentials(userData) {
           ${expiration.milliseconds}
         )
       )`;
-    GetDbInfo(queryString);
+    await GetDbInfo(queryString);
+    const resTest = await GetDbInfo(`SELECT * FROM "login" WHERE token = '${responseData.accsess_token}'`);
+    responseData.data = resTest;
+    console.log(resTest);
   } else {
     responseData.isAuthenticated = false;
     status = StatusCodes.StatusCodes.UNAUTHORIZED;

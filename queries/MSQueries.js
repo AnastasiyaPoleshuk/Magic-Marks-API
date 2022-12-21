@@ -2,7 +2,7 @@ const sql = require('mssql');
 
 const MSconfig = {
   user: 'Uladzimir',
-  password: 'qwerty123!',
+  password: 'qwerty123',
   server: 'nastya-education.database.windows.net',
   database: 'nastya-education',
   pool: {

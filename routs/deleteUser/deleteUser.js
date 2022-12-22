@@ -18,7 +18,10 @@ const deleteUser = async (req, res) => {
 
 async function deleteUserInDb(token) {
   const response = {
-    message: "BAD REQUEST",
+    data: {
+      isDeleted: false,
+      message: "BAD REQUEST",
+    },
     status: StatusCodes.StatusCodes.BAD_REQUEST,
   };
   const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
@@ -32,7 +35,10 @@ async function deleteUserInDb(token) {
   const deletedMarks = await GetDbInfo(`DELETE FROM "marks" WHERE userid = ${userId}`);
 
   if (deletedUser === null && deletedMarks === null) {
-    response.message = "User was successfully deleted";
+    response.data = { 
+      isDeleted: true,
+      message: "User was successfully deleted"
+    };
     response.status = StatusCodes.StatusCodes.OK;
   }
 

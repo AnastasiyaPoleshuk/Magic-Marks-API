@@ -15,13 +15,15 @@ const createUser = async (req, res) => {
 
 async function setUser(user) {
   const response = {
-    message: "user already exist",
+    data: {
+      isUserCreated: false,
+      message: "user already exist"
+    },
     status: StatusCodes.StatusCodes.BAD_REQUEST,
   };
   const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
 
-  const isNewUser = await checkUserEmail(user.Email, dBName);
-
+  const isNewUser = await checkUserEmail(user.email, dBName);
   if (!isNewUser) {
     return response;
   };
@@ -30,13 +32,16 @@ async function setUser(user) {
   const userId = await createUserId(dBName);
   const res = await GetDbInfo(`INSERT INTO ${dBName} VALUES(
       ${userId},
-      '${user.Email}',
-      N'${user.FirstName}',
-      N'${user.LastName}',
-      ${user.Class},
+      '${user.email}',
+      N'${user.firstName}',
+      N'${user.lastName}',
+      ${user.class},
       '${hashedPassword}')`
   );
-  response.message = "user successfully created" ;
+  response.data = { 
+    isUserCreated: true,
+    message: "user successfully created"
+  };
   response.status = StatusCodes.StatusCodes.OK;
   return response;
 }

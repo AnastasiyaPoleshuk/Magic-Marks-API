@@ -45,7 +45,6 @@ async function checkUserCredentials(userData) {
     isValidPassword
   ) {
     responseData.accsess_token = createToken(userDb[0]);
-    status = StatusCodes.StatusCodes.OK;
     const expiration = createExpirationTime();
     const queryString = constants.CONSTANTS.DATABASE === "Postgree" ?
       `INSERT INTO "login" VALUES(

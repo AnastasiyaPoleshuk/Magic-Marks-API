@@ -27,12 +27,13 @@ async function getUserData(token) {
     data: {}
   }
   const userid = await userTokenCheck(token);
+  const dBName = constants.CONSTANTS.DATABASE === "Postgree" ? '"user"' : "[user]";
 
   if (!userid) {
     response.status = StatusCodes.StatusCodes.UNAUTHORIZED;
     return response;
   } else {
-    const userdb = await GetDbInfo(`SELECT * FROM "user" where userid=${userid}`);
+    const userdb = await GetDbInfo(`SELECT * FROM ${dBName} WHERE userid=${userid}`);
     const userSubjects = await getSubjectsInfo(userdb[0].userid);
 
     let averageMarks = [];

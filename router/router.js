@@ -49,13 +49,13 @@ const router = (app) => {
   app.post('/user', (async (request, response) => {
     createUser(request, response)
       .then((responseData) => {
-        response.status(responseData.status).send(responseData.message);
+        response.status(responseData.status).send(responseData.data);
       });
   }));
   app.delete('/user', (async (request, response) => {
     deleteUser(request.query, response)
       .then((responseData) => {
-        response.status(responseData.status).send(responseData.message);
+        response.status(responseData.status).send(responseData.data);
       });
   }));
 

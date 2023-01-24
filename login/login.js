@@ -89,7 +89,7 @@ function createExpirationTime(db) {
     const template = moment().add(30, 'minute');
     const expiration = {
       year: moment(template).year(),
-      month: moment(template).month(),
+      month: moment(template).month() + 1,
       day: moment(template).date(),
       hour: moment(template).hour(),
       minute: moment(template).minute(),
